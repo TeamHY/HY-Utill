@@ -22,13 +22,16 @@ namespace HY_Utill
     /// </summary>
     public partial class MainWindow : Window
     {
+        public static string storageUrl = @"https://teamhy.github.io/";
+        public static string ModsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\My Games\Binding of Isaac Afterbirth+ Mods";
+
+        public Brush DefaultProgressBarBrush;
+
         private delegate void CSafeSetMaximum(Int32 value);
         private delegate void CSafeSetValue(Int32 value);
 
         private CSafeSetMaximum cssm;
         private CSafeSetValue cssv;
-
-        private string latestVersion;
 
         private WebClient wc;
         private bool setBaseSize;
@@ -44,29 +47,19 @@ namespace HY_Utill
             InitializeComponent();
         }
 
-        private void CheckVersion()
+        private void VersionInfoUpdate()
         {
-            string storageUrl = @"https://teamhy.github.io/";
+            VersionUtility.CheckVersion();
 
-            System.IO.Path.GetTempFileName();
+            if (VersionUtility.CurrentVersion != null)
+                lblCurrentVersion.Content = VersionUtility.CurrentVersion;
+            else
+                lblCurrentVersion.Content = "N/A";
 
-            XmlDocument currentXml = new XmlDocument();
-            XmlDocument latestXml = new XmlDocument();
-
-            //currentXml.Load("카그 경로");
-            latestXml.Load(storageUrl + "versiondata.xml");
-
-            XmlNodeList xnList = latestXml.SelectNodes("/versiondata/chaosgreedier");
-
-            foreach (XmlNode xn in xnList)
-            {
-                //string changelog = xn["changelog"].InnerText;
-
-                latestVersion = xn["version"].InnerText;
-                lblLatestVersion.Content = latestVersion;
-
-                StartFileDownload(String.Format(@"https://teamhy.github.io/ChaosGreedier_{0}.7z", latestVersion), Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\My Games\Binding of Isaac Afterbirth+ Mods");
-            }
+            if (VersionUtility.LatestVersion != null)
+                lblLatestVersion.Content = VersionUtility.LatestVersion;
+            else
+                lblLatestVersion.Content = "N/A";
         }
 
         private void StartFileDownload(String remoteAddress, String localPath)
@@ -101,6 +94,7 @@ namespace HY_Utill
                 prgInstall.Foreground = Brushes.Gold;
                 setBaseSize = false;
                 nowDownloading = true;
+                btnStart.IsEnabled = false;
             }
             catch (Exception ex)
             {
@@ -125,11 +119,12 @@ namespace HY_Utill
 
         private void MainFormLoad(object sender, RoutedEventArgs e)
         {
+            DefaultProgressBarBrush = prgInstall.Foreground;
+            VersionInfoUpdate();
 
             // 이벤트를 연결한다.
             wc.DownloadFileCompleted += new AsyncCompletedEventHandler(FileDownloadCompleted);
             wc.DownloadProgressChanged += new DownloadProgressChangedEventHandler(FileDownloadProgressChanged);
-
         }
 
         void FileDownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
@@ -158,15 +153,17 @@ namespace HY_Utill
 
         void FileDownloadCompleted(object sender, AsyncCompletedEventArgs e)
         {
+            prgInstall.Foreground = DefaultProgressBarBrush;
             nowDownloading = false;
-            //btnStart.Enabled = true;
-            //txtAddress.Enabled = true;
+            btnStart.IsEnabled = true;
+
             MessageBox.Show("파일 다운로드 완료!", "오류", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            CheckVersion();
+            VersionInfoUpdate();
+            StartFileDownload(String.Format(@"https://teamhy.github.io/ChaosGreedier_{0}.7z", VersionUtility.LatestVersion), Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\My Games\Binding of Isaac Afterbirth+ Mods");
         }
     }
 }
