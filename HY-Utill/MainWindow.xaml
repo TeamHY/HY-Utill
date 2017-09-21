@@ -5,8 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HY_Utill"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="HY Utill" Height="350" Width="525" ResizeMode="CanMinimize" Loaded="MainFormLoad">
     <Grid>
-        
+        <Button x:Name="btnStart" Content="Button" HorizontalAlignment="Left" Height="30" Margin="439,281,0,0" VerticalAlignment="Top" Width="70" Click="Button_Click"/>
+        <ProgressBar x:Name="prgInstall" HorizontalAlignment="Left" Height="30" VerticalAlignment="Top" Width="424" Margin="10,281,0,0"/>
+        <Label x:Name="lblCurrentVersion" Content="CurrentVersion" Height="266" Margin="0,0,269,45" VerticalAlignment="Bottom" VerticalContentAlignment="Center" HorizontalAlignment="Right" Width="240" HorizontalContentAlignment="Center"/>
+        <Label x:Name="lblLatestVersion" Content="LatestVersion" Height="266" Margin="0,0,10,45" VerticalAlignment="Bottom" VerticalContentAlignment="Center" HorizontalAlignment="Right" Width="240" HorizontalContentAlignment="Center"/>
     </Grid>
 </Window>
