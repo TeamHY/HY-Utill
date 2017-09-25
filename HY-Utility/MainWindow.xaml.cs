@@ -19,7 +19,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml;
 
-namespace HY_Utill
+namespace HY_Utility
 {
     /// <summary>
     /// MainWindow.xaml에 대한 상호 작용 논리

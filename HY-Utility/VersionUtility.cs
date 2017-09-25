@@ -5,7 +5,7 @@ using System.Net;
 using System.Text;
 using System.Xml;
 
-namespace HY_Utill
+namespace HY_Utility
 {
     class VersionUtility
     {
