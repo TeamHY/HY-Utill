@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -190,8 +191,13 @@ namespace HY_Utill
             nowDownloading = false;
             btnStart.IsEnabled = true;
 
+            var thread = new Thread(new ThreadStart(InstallChaosGreedier));
+        }
+
+        private void InstallChaosGreedier()
+        {
             DirectoryForceDelete(ModsPath + @"\chaosgreedier");
-            ExtractZipfile(String.Format(@"{0}\ChaosGreedier_{1}.zip",TempFolderPath, VersionUtility.LatestVersion), ModsPath + @"\chaosgreedier");
+            ExtractZipfile(String.Format(@"{0}\ChaosGreedier_{1}.zip", TempFolderPath, VersionUtility.LatestVersion), ModsPath + @"\chaosgreedier");
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -199,6 +205,11 @@ namespace HY_Utill
             VersionInfoUpdate();
 
             StartFileDownload(String.Format(@"https://teamhy.github.io/ChaosGreedier_{0}.zip", VersionUtility.LatestVersion), TempFolderPath);
+        }
+
+        private void Button_Click_1(object sender, RoutedEventArgs e)
+        {
+            VersionInfoUpdate();
         }
     }
 }
