@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.26730.15
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HY-Utill", "HY-Utill\HY-Utill.csproj", "{9122E675-456C-419A-8DEB-E67F8C9872BF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HY-Updater", "HY-Updater\HY-Updater.csproj", "{5C6BCC0C-68CC-4F3B-BF25-5F3C92E87F91}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{9122E675-456C-419A-8DEB-E67F8C9872BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9122E675-456C-419A-8DEB-E67F8C9872BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9122E675-456C-419A-8DEB-E67F8C9872BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C6BCC0C-68CC-4F3B-BF25-5F3C92E87F91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C6BCC0C-68CC-4F3B-BF25-5F3C92E87F91}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C6BCC0C-68CC-4F3B-BF25-5F3C92E87F91}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C6BCC0C-68CC-4F3B-BF25-5F3C92E87F91}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
