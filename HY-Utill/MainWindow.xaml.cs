@@ -1,8 +1,11 @@
-﻿using System;
+﻿using Ionic.Zip;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -25,6 +28,8 @@ namespace HY_Utill
         public static string storageUrl = @"https://teamhy.github.io/";
         public static string ModsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\My Games\Binding of Isaac Afterbirth+ Mods";
 
+        public string TempFolderPath;
+
         public Brush DefaultProgressBarBrush;
 
         private delegate void CSafeSetMaximum(Int32 value);
@@ -45,6 +50,33 @@ namespace HY_Utill
             wc = new WebClient();
 
             InitializeComponent();
+        }
+
+        public void ExtractZipfile(string sourceFilePath, string targetPath)
+        {
+            var readOptions = new ReadOptions() { Encoding = Encoding.GetEncoding("euc-kr") };
+
+            using (ZipFile zip = ZipFile.Read(sourceFilePath, readOptions))
+            {
+                /// Unzipping 될때 이벤트 핸들러를 등록 (현재 진행 상황을 위해)
+                //zip.ReadProgress += new EventHandler<ReadProgressEventArgs>(zip_ReadProgress);
+
+                /// Unzipping
+                zip.ExtractAll(targetPath, ExtractExistingFileAction.OverwriteSilently);
+            }
+        }
+
+        public void DirectoryForceDelete(string srcPath)
+        {
+            DirectoryInfo dir = new DirectoryInfo(srcPath);
+
+            System.IO.FileInfo[] files = dir.GetFiles("*.*",
+            SearchOption.AllDirectories);
+
+            foreach (System.IO.FileInfo file in files)
+                file.Attributes = FileAttributes.Normal;
+
+            Directory.Delete(srcPath, true);
         }
 
         private void VersionInfoUpdate()
@@ -119,6 +151,7 @@ namespace HY_Utill
 
         private void MainFormLoad(object sender, RoutedEventArgs e)
         {
+            TempFolderPath = System.IO.Path.GetTempPath() + @"\" + Assembly.GetEntryAssembly().GetName().Name;
             DefaultProgressBarBrush = prgInstall.Foreground;
             VersionInfoUpdate();
 
@@ -157,13 +190,15 @@ namespace HY_Utill
             nowDownloading = false;
             btnStart.IsEnabled = true;
 
-            MessageBox.Show("파일 다운로드 완료!", "오류", MessageBoxButton.OK, MessageBoxImage.Information);
+            DirectoryForceDelete(ModsPath + @"\chaosgreedier");
+            ExtractZipfile(String.Format(@"{0}\ChaosGreedier_{1}.zip",TempFolderPath, VersionUtility.LatestVersion), ModsPath + @"\chaosgreedier");
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             VersionInfoUpdate();
-            StartFileDownload(String.Format(@"https://teamhy.github.io/ChaosGreedier_{0}.7z", VersionUtility.LatestVersion), Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\My Games\Binding of Isaac Afterbirth+ Mods");
+
+            StartFileDownload(String.Format(@"https://teamhy.github.io/ChaosGreedier_{0}.zip", VersionUtility.LatestVersion), TempFolderPath);
         }
     }
 }

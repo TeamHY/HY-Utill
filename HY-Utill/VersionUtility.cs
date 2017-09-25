@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Xml;
 
@@ -11,39 +12,51 @@ namespace HY_Utill
         public static string LatestVersion { get; set; }
         public static string CurrentVersion { get; set; }
 
+        private static WebClient webClient = new WebClient();
+
         public static void CheckVersion()
         {
-            if (System.IO.File.Exists(MainWindow.ModsPath + @"\chaosgreedier\metadata.xml"))
+            try
             {
-                XmlDocument currentXml = new XmlDocument();
+                var currentXmlPath = MainWindow.ModsPath + @"\chaosgreedier\metadata.xml";
 
-                currentXml.Load(MainWindow.ModsPath + @"\chaosgreedier\metadata.xml");
+                var currentXml = new XmlDocument();
 
-                XmlNodeList currentXmlNodeList = currentXml.SelectNodes("/metadata");
+                currentXml.Load(currentXmlPath);
+
+                var currentXmlNodeList = currentXml.SelectNodes("/metadata");
 
                 foreach (XmlNode xn in currentXmlNodeList)
                 {
                     CurrentVersion = xn["version"].InnerText;
                 }
             }
-            else
+            catch (Exception e)
             {
                 CurrentVersion = null;
             }
 
-            System.IO.Path.GetTempFileName();
-
-            XmlDocument latestXml = new XmlDocument();
-
-            latestXml.Load(MainWindow.storageUrl + "versiondata.xml");
-
-            XmlNodeList latestXmlNodeList = latestXml.SelectNodes("/versiondata/chaosgreedier");
-
-            foreach (XmlNode xn in latestXmlNodeList)
+            try
             {
-                //Changelog = xn["changelog"].InnerText;
+                var latestXmlPath = System.IO.Path.GetTempFileName();
 
-                LatestVersion = xn["version"].InnerText;
+                var latestXml = new XmlDocument();
+
+                webClient.DownloadFile(MainWindow.storageUrl + "versiondata.xml", latestXmlPath);
+                latestXml.Load(latestXmlPath);
+
+                var latestXmlNodeList = latestXml.SelectNodes("/versiondata/chaosgreedier");
+
+                foreach (XmlNode xn in latestXmlNodeList)
+                {
+                    //Changelog = xn["changelog"].InnerText;
+
+                    LatestVersion = xn["version"].InnerText;
+                }
+            }
+            catch (Exception e)
+            {
+                LatestVersion = null;
             }
         }
     }
