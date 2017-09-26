@@ -67,19 +67,6 @@ namespace HY_Utility
             }
         }
 
-        public void DirectoryForceDelete(string srcPath)
-        {
-            DirectoryInfo dir = new DirectoryInfo(srcPath);
-
-            System.IO.FileInfo[] files = dir.GetFiles("*.*",
-            SearchOption.AllDirectories);
-
-            foreach (System.IO.FileInfo file in files)
-                file.Attributes = FileAttributes.Normal;
-
-            Directory.Delete(srcPath, true);
-        }
-
         private void VersionInfoUpdate()
         {
             VersionUtility.CheckVersion();
@@ -110,7 +97,7 @@ namespace HY_Utility
             }
 
             // 파일이 저장될 위치를 저장한다.
-            String fileName = String.Format(@"{0}\{1}", localPath, System.IO.Path.GetFileName(remoteAddress));
+            String fileName = String.Format(@"{0}\{1}", localPath, System.IO.Path.GetFileName(remoteAddress) + ".temp");
 
             // 폴더가 존재하지 않는다면 폴더를 생성한다.
             if (!System.IO.Directory.Exists(localPath))
@@ -191,23 +178,39 @@ namespace HY_Utility
             nowDownloading = false;
             btnStart.IsEnabled = true;
 
-            var thread = new Thread(new ThreadStart(InstallChaosGreedier));
+            var zipFilePath = String.Format(@"{0}\ChaosGreedier_{1}.zip", TempFolderPath, VersionUtility.LatestVersion);
+            var zipTempFilePath = zipFilePath + ".temp";
+
+            if (File.Exists(zipTempFilePath))
+            {
+                if (File.Exists(zipFilePath))
+                    File.Delete(zipFilePath);
+
+                File.Move(zipTempFilePath, zipFilePath);
+                var thread = new Thread(new ThreadStart(InstallChaosGreedier));
+                thread.Start();
+            }
+            else
+            {
+                MessageBox.Show("파일이 다운로드 되지 않았습니다.", "오류", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                return;
+            }
         }
 
         private void InstallChaosGreedier()
         {
-            DirectoryForceDelete(ModsPath + @"\chaosgreedier");
+            ModUtility.RemoveMod("chaosgreedier");
             ExtractZipfile(String.Format(@"{0}\ChaosGreedier_{1}.zip", TempFolderPath, VersionUtility.LatestVersion), ModsPath + @"\chaosgreedier");
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void BtnStart_Click(object sender, RoutedEventArgs e)
         {
             VersionInfoUpdate();
 
-            StartFileDownload(String.Format(@"https://teamhy.github.io/ChaosGreedier_{0}.zip", VersionUtility.LatestVersion), TempFolderPath);
+            StartFileDownload(VersionUtility.LatestUrl, TempFolderPath);
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private void BtnReload_Click(object sender, RoutedEventArgs e)
         {
             VersionInfoUpdate();
         }
