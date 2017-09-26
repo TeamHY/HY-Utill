@@ -9,8 +9,10 @@ namespace HY_Utility
 {
     class VersionUtility
     {
-        public static string LatestVersion { get; set; }
-        public static string CurrentVersion { get; set; }
+        public static string CurrentVersion { get; private set; }
+        public static string LatestVersion { get; private set; }
+        public static string LatestUrl { get; private set; }
+        public static string LatestChangelog { get; private set; }
 
         private static WebClient webClient = new WebClient();
 
@@ -38,20 +40,20 @@ namespace HY_Utility
 
             try
             {
-                var latestXmlPath = System.IO.Path.GetTempFileName();
+                //var latestXmlPath = System.IO.Path.GetTempFileName();
 
                 var latestXml = new XmlDocument();
 
-                webClient.DownloadFile(MainWindow.storageUrl + "versiondata.xml", latestXmlPath);
-                latestXml.Load(latestXmlPath);
+                //webClient.DownloadFile(MainWindow.storageUrl + "versiondata.xml", latestXmlPath);
+                latestXml.Load(MainWindow.storageUrl + "versiondata.xml");
 
                 var latestXmlNodeList = latestXml.SelectNodes("/versiondata/chaosgreedier");
 
                 foreach (XmlNode xn in latestXmlNodeList)
                 {
-                    //Changelog = xn["changelog"].InnerText;
-
                     LatestVersion = xn["version"].InnerText;
+                    LatestUrl = xn["url"].InnerText;
+                    LatestChangelog = xn["changelog"].InnerText;
                 }
             }
             catch (Exception e)
