@@ -16,9 +16,21 @@ namespace HY_Utility
     {
         /// 출처: http://scripter.co.kr/229 [superAction]
 
+        public static String[] Args { get; private set; }
+
         public App()
         {
             AppDomain.CurrentDomain.AssemblyResolve += new ResolveEventHandler(ResolveAssembly);
+        }
+
+        private void Application_Startup(object sender, StartupEventArgs e)
+        {
+            if (e.Args.Length == 0) return;
+
+            if (e.Args.Length > 0)
+            {
+                Args = e.Args;
+            }
         }
 
         static Assembly ResolveAssembly(object sender, ResolveEventArgs args)
