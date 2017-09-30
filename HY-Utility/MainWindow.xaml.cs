@@ -33,19 +33,18 @@ namespace HY_Utility
 
         public Brush DefaultProgressBarBrush;
 
-        private delegate void CSafeSetMaximum(Int32 value);
         private delegate void CSafeSetValue(Int32 value);
 
-        private CSafeSetMaximum cssm;
         private CSafeSetValue cssv;
 
         private WebClient wc;
-        private bool setBaseSize;
         private bool nowDownloading;
+
+        private int totalFiles;
+        private int filesExtracted;
 
         public MainWindow()
         {
-            cssm = new CSafeSetMaximum(CrossSafeSetMaximumMethod);
             cssv = new CSafeSetValue(CrossSafeSetValueMethod);
 
             wc = new WebClient();
@@ -59,11 +58,31 @@ namespace HY_Utility
 
             using (ZipFile zip = ZipFile.Read(sourceFilePath, readOptions))
             {
+                totalFiles = zip.Count;
+                filesExtracted = 0;
+
                 /// Unzipping 될때 이벤트 핸들러를 등록 (현재 진행 상황을 위해)
-                //zip.ReadProgress += new EventHandler<ReadProgressEventArgs>(zip_ReadProgress);
+                zip.ExtractProgress += zip_ExtractProgress;
 
                 /// Unzipping
                 zip.ExtractAll(targetPath, ExtractExistingFileAction.OverwriteSilently);
+            }
+        }
+
+        private void zip_ExtractProgress(object sender, ExtractProgressEventArgs e)
+        {
+            if (e.EventType == ZipProgressEventType.Extracting_BeforeExtractEntry)
+            {
+                filesExtracted++;
+                CrossSafeSetValueMethod((int)(100 * filesExtracted / totalFiles));
+            }
+            else if (e.EventType == ZipProgressEventType.Extracting_AfterExtractAll)
+            {
+                nowDownloading = false;
+                //btnStart.IsEnabled = true;
+                //btnReload.IsEnabled = true;
+
+                MessageBox.Show("ChaosGreedier 설치 완료!", "설치 완료", MessageBoxButton.OK, MessageBoxImage.Information);
             }
         }
 
@@ -112,9 +131,9 @@ namespace HY_Utility
                 // 프로그레스바의 크기를 0으로 만든다.
                 prgInstall.Value = 0;
                 prgInstall.Foreground = Brushes.Gold;
-                setBaseSize = false;
                 nowDownloading = true;
                 btnStart.IsEnabled = false;
+                btnReload.IsEnabled = false;
             }
             catch (Exception ex)
             {
@@ -122,17 +141,10 @@ namespace HY_Utility
             }
         }
 
-        private void CrossSafeSetMaximumMethod(Int32 value)
-        {
-            if (!prgInstall.Dispatcher.CheckAccess())
-                prgInstall.Dispatcher.Invoke(cssm, value);
-            else
-                prgInstall.Maximum = value;
-        }
         private void CrossSafeSetValueMethod(Int32 value)
         {
             if (!prgInstall.Dispatcher.CheckAccess())
-                prgInstall.Dispatcher.Invoke(cssm, value);
+                prgInstall.Dispatcher.Invoke(cssv, value);
             else
                 prgInstall.Value = value;
         }
@@ -159,14 +171,14 @@ namespace HY_Utility
 
             // 프로그레스바의 최대 크기가 정해지지 않은 경우,
             // 받아야 할 최대 데이터 량으로 설정한다.
-            if (!setBaseSize)
-            {
-                CrossSafeSetMaximumMethod((int)e.TotalBytesToReceive);
-                setBaseSize = true;
-            }
+            //if (!setBaseSize)
+            //{
+            //    CrossSafeSetMaximumMethod((int)e.TotalBytesToReceive);
+            //    setBaseSize = true;
+            //}
 
             // 받은 데이터 량을 나타낸다.
-            CrossSafeSetValueMethod((int)e.BytesReceived);
+            CrossSafeSetValueMethod((int)(100 * e.BytesReceived / e.TotalBytesToReceive));
 
             // 받은 데이터 / 받아야할 데이터 (퍼센트) 로 나타낸다.
             //CrossSafeSetTextMethod(String.Format("{0:N0} / {1:N0} ({2:P})", e.BytesReceived, e.TotalBytesToReceive, (Double)e.BytesReceived / (Double)e.TotalBytesToReceive));
@@ -175,8 +187,10 @@ namespace HY_Utility
         void FileDownloadCompleted(object sender, AsyncCompletedEventArgs e)
         {
             prgInstall.Foreground = DefaultProgressBarBrush;
-            nowDownloading = false;
+            CrossSafeSetValueMethod(0);
+            //nowDownloading = false;
             btnStart.IsEnabled = true;
+            btnReload.IsEnabled = true;
 
             var zipFilePath = String.Format(@"{0}\ChaosGreedier_{1}.zip", TempFolderPath, VersionUtility.LatestVersion);
             var zipTempFilePath = zipFilePath + ".temp";
