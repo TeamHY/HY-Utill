@@ -1,4 +1,5 @@
-﻿using Ionic.Zip;
+﻿using HY_Utility.Data;
+using Ionic.Zip;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -90,13 +91,13 @@ namespace HY_Utility
         {
             VersionUtility.CheckVersion();
 
-            if (VersionUtility.CurrentVersion != null)
-                lblCurrentVersion.Content = VersionUtility.CurrentVersion;
+            if (ModData.ChaosGreedier.CurrentVersion != null)
+                lblCurrentVersion.Content = ModData.ChaosGreedier.CurrentVersion;
             else
                 lblCurrentVersion.Content = "N/A";
 
-            if (VersionUtility.LatestVersion != null)
-                lblLatestVersion.Content = VersionUtility.LatestVersion;
+            if (ModData.ChaosGreedier.LatestVersion != null)
+                lblLatestVersion.Content = ModData.ChaosGreedier.LatestVersion;
             else
                 lblLatestVersion.Content = "N/A";
         }
@@ -192,7 +193,7 @@ namespace HY_Utility
             btnStart.IsEnabled = true;
             btnReload.IsEnabled = true;
 
-            var zipFilePath = String.Format(@"{0}\ChaosGreedier_{1}.zip", TempFolderPath, VersionUtility.LatestVersion);
+            var zipFilePath = String.Format(@"{0}\ChaosGreedier_{1}.zip", TempFolderPath, ModData.ChaosGreedier.LatestVersion);
             var zipTempFilePath = zipFilePath + ".temp";
 
             if (File.Exists(zipTempFilePath))
@@ -214,14 +215,14 @@ namespace HY_Utility
         private void InstallChaosGreedier()
         {
             ModUtility.RemoveMod("chaosgreedier");
-            ExtractZipfile(String.Format(@"{0}\ChaosGreedier_{1}.zip", TempFolderPath, VersionUtility.LatestVersion), ModsPath + @"\chaosgreedier");
+            ExtractZipfile(String.Format(@"{0}\ChaosGreedier_{1}.zip", TempFolderPath, ModData.ChaosGreedier.LatestVersion), ModsPath + @"\chaosgreedier");
         }
 
         private void BtnStart_Click(object sender, RoutedEventArgs e)
         {
             VersionInfoUpdate();
 
-            StartFileDownload(VersionUtility.LatestUrl, TempFolderPath);
+            StartFileDownload(ModData.ChaosGreedier.LatestUrl, TempFolderPath);
         }
 
         private void BtnReload_Click(object sender, RoutedEventArgs e)

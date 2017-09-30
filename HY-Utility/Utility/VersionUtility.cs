@@ -1,64 +1,83 @@
-﻿using System;
+﻿using HY_Utility.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Windows;
 using System.Xml;
 
 namespace HY_Utility
 {
     class VersionUtility
     {
-        public static string CurrentVersion { get; private set; }
-        public static string LatestVersion { get; private set; }
-        public static string LatestUrl { get; private set; }
-        public static string LatestChangelog { get; private set; }
-
-        private static WebClient webClient = new WebClient();
+        private WebClient webClient = new WebClient();
 
         public static void CheckVersion()
         {
-            try
+            ModData[] modDataList = { ModData.ChaosGreedier };
+
+            CheckCurrentVersion(modDataList);
+            CheckLatestVersion(modDataList);
+        }
+
+        private static void CheckCurrentVersion(ModData[] modDataList)
+        {
+            foreach (ModData modData in modDataList)
             {
-                var currentXmlPath = MainWindow.ModsPath + @"\chaosgreedier\metadata.xml";
-
-                var currentXml = new XmlDocument();
-
-                currentXml.Load(currentXmlPath);
-
-                var currentXmlNodeList = currentXml.SelectNodes("/metadata");
-
-                foreach (XmlNode xn in currentXmlNodeList)
+                try
                 {
-                    CurrentVersion = xn["version"].InnerText;
+                    var xmlDocument = new XmlDocument();
+                    xmlDocument.Load(modData.Directory + @"\metadata.xml");
+
+                    var xmlNodeList = xmlDocument.SelectNodes("/metadata");
+
+                    foreach (XmlNode xmlNode in xmlNodeList)
+                    {
+                        modData.CurrentVersion = xmlNode["version"].InnerText;
+                    }
+                }
+                catch
+                {
+                    modData.CurrentVersion = null;
                 }
             }
-            catch (Exception e)
-            {
-                CurrentVersion = null;
-            }
+        }
 
+        private static void CheckLatestVersion(ModData[] modDataList)
+        {
             try
             {
-                //var latestXmlPath = System.IO.Path.GetTempFileName();
+                var xmlDocument = new XmlDocument();
+                xmlDocument.Load(MainWindow.storageUrl + "versiondata.xml");
 
-                var latestXml = new XmlDocument();
-
-                //webClient.DownloadFile(MainWindow.storageUrl + "versiondata.xml", latestXmlPath);
-                latestXml.Load(MainWindow.storageUrl + "versiondata.xml");
-
-                var latestXmlNodeList = latestXml.SelectNodes("/versiondata/chaosgreedier");
-
-                foreach (XmlNode xn in latestXmlNodeList)
+                foreach (ModData modData in modDataList)
                 {
-                    LatestVersion = xn["version"].InnerText;
-                    LatestUrl = xn["url"].InnerText;
-                    LatestChangelog = xn["changelog"].InnerText;
+                    try
+                    {
+                        var xmlNodeList = xmlDocument.SelectNodes(String.Format("/versiondata/{0}", modData.Name));
+
+                        foreach (XmlNode xmlNode in xmlNodeList)
+                        {
+                            modData.LatestVersion = xmlNode["version"].InnerText;
+                            modData.LatestUrl = xmlNode["url"].InnerText;
+                            modData.LatestChangelog = xmlNode["changelog"].InnerText;
+                        }
+                    }
+                    catch
+                    {
+                        modData.LatestVersion = null;
+                    }
                 }
             }
-            catch (Exception e)
+            catch
             {
-                LatestVersion = null;
+                foreach (ModData modData in modDataList)
+                {
+                    modData.LatestVersion = null;
+                }
+
+                MessageBox.Show("최신 버전을 불러오지 못했습니다.", "오류", MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }
     }
