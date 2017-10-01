@@ -63,14 +63,14 @@ namespace HY_Utility
                 filesExtracted = 0;
 
                 /// Unzipping 될때 이벤트 핸들러를 등록 (현재 진행 상황을 위해)
-                zip.ExtractProgress += zip_ExtractProgress;
+                zip.ExtractProgress += Zip_ExtractProgress;
 
                 /// Unzipping
                 zip.ExtractAll(targetPath, ExtractExistingFileAction.OverwriteSilently);
             }
         }
 
-        private void zip_ExtractProgress(object sender, ExtractProgressEventArgs e)
+        private void Zip_ExtractProgress(object sender, ExtractProgressEventArgs e)
         {
             if (e.EventType == ZipProgressEventType.Extracting_BeforeExtractEntry)
             {
@@ -152,7 +152,7 @@ namespace HY_Utility
 
         private void MainFormLoad(object sender, RoutedEventArgs e)
         {
-            TempFolderPath = System.IO.Path.GetTempPath() + @"\" + Assembly.GetEntryAssembly().GetName().Name;
+            TempFolderPath = System.IO.Path.GetTempPath() + Assembly.GetEntryAssembly().GetName().Name;
             DefaultProgressBarBrush = prgInstall.Foreground;
             VersionInfoUpdate();
 

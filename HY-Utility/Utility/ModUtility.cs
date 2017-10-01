@@ -57,7 +57,7 @@ namespace HY_Utility
 
                 Directory.Delete(srcPath, true);
             }
-            catch (Exception e)
+            catch
             {
                 return;
             }
