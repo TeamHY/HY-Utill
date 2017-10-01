@@ -12,5 +12,18 @@ namespace HY_Updater
     /// </summary>
     public partial class App : Application
     {
+        public static string[] Args { get; private set; }
+
+        private void Application_Startup(object sender, StartupEventArgs e)
+        {
+            if (e.Args.Length >= 3)
+            {
+                Args = e.Args;
+            }
+            else
+            {
+                Args = new string[] { "exit" };
+            }
+        }
     }
 }

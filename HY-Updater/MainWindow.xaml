@@ -5,8 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HY_Updater"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="HY Updater" Height="94" Width="320" ResizeMode="NoResize" WindowStartupLocation="CenterScreen" Closing="MainWindow_Closing" Loaded="MainWindow_Loaded">
     <Grid>
-        
+        <ProgressBar x:Name="PrgUpdate" Height="20" Margin="10,10,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="294"/>
+        <Button x:Name="BtnCancel" Content="취소" Margin="229,35,0,0" VerticalAlignment="Top" Width="75" HorizontalAlignment="Left" Click="BtnCancel_Click"/>
     </Grid>
 </Window>
