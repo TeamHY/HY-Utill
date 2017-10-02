@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HY_Utility"
         mc:Ignorable="d"
-        Title="HY Utill" Height="350" Width="525" ResizeMode="CanMinimize" Loaded="MainFormLoad" Icon="Resources/icon.ico">
+        Title="HY Utility" Height="350" Width="525" ResizeMode="CanMinimize" Loaded="MainFormLoad" Icon="Resources/icon.ico">
     <Grid>
         <Button x:Name="btnStart" Content="설치" HorizontalAlignment="Left" Height="30" Margin="439,281,0,0" VerticalAlignment="Top" Width="70" Click="BtnStart_Click"/>
         <ProgressBar x:Name="prgInstall" HorizontalAlignment="Left" Height="30" VerticalAlignment="Top" Width="424" Margin="10,281,0,0"/>
