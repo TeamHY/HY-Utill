@@ -46,7 +46,7 @@ namespace HY_Updater
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {            
-            _tempFolderPath = System.IO.Path.GetTempPath() + Assembly.GetEntryAssembly().GetName().Name;
+            _tempFolderPath = System.IO.Path.GetTempPath() + Assembly.GetEntryAssembly().GetName().Name + @"\";
 
             webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(UpdateProgressChanged);
             webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(UpdateCompleted);
@@ -101,7 +101,7 @@ namespace HY_Updater
             try
             {
                 // 파일이 저장될 위치를 저장한다.
-                _tempFilePath = String.Format(@"{0}\{1}", _tempFolderPath, System.IO.Path.GetFileName(_remoteAddress) + ".temp");
+                _tempFilePath = String.Format(@"{0}{1}", _tempFolderPath, System.IO.Path.GetFileName(_remoteAddress) + ".temp");
 
                 // 폴더가 존재하지 않는다면 폴더를 생성한다.
                 if (!Directory.Exists(_tempFolderPath))
@@ -140,11 +140,8 @@ namespace HY_Updater
         {
             try
             {
-                if (File.Exists(_localPath))
-                    File.Delete(_localPath);
-
                 KillUtility();
-
+                File.Delete(_localPath);
                 File.Move(_tempFilePath, _localPath);
 
                 _nowUpdating = false;

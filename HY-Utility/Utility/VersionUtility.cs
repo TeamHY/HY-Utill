@@ -1,8 +1,10 @@
 ﻿using HY_Utility.Data;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
+using System.Reflection;
 using System.Text;
 using System.Windows;
 using System.Xml;
@@ -11,11 +13,62 @@ namespace HY_Utility
 {
     class VersionUtility
     {
-        private WebClient webClient = new WebClient();
+        private static WebClient webClient = new WebClient();
+
+        public static void CheckProgramVersion()
+        {
+            try
+            {
+                string latestVersion = null;
+                string latestUrl = null;
+
+                var xmlDocument = new XmlDocument();
+                xmlDocument.Load(MainWindow.storageUrl + "versiondata.xml");
+
+                var xmlNodeList = xmlDocument.SelectNodes(String.Format("/versiondata/{0}", "hyutility"));
+
+                foreach (XmlNode xmlNode in xmlNodeList)
+                {
+                    latestVersion = xmlNode["version"].InnerText;
+                    latestUrl = xmlNode["url"].InnerText;
+                }
+
+                if (!Assembly.GetExecutingAssembly().GetName().Version.ToString().Equals(latestVersion))
+                {
+                    MessageBoxResult result = MessageBox.Show("신 버전이 있습니다.\r\n업데이트 하시겠습니까?", "HY Utility", MessageBoxButton.YesNo, MessageBoxImage.Asterisk);
+                    if (result == MessageBoxResult.Yes)
+                    {
+                        try
+                        {
+                            var updaterUri = MainWindow.storageUrl + "HY-Updater.exe";
+                            var updaterFileName = MainWindow.TempFolderPath + "HY-Updater.exe";
+
+                            webClient.DownloadFile(new Uri(updaterUri), updaterFileName);
+
+                            Process.Start(updaterFileName, String.Format("\"{0}\" \"{1}\" \"{2}\"", Assembly.GetEntryAssembly().GetName().Name, latestUrl, AppDomain.CurrentDomain.BaseDirectory + Assembly.GetEntryAssembly().GetName().Name + ".exe"));
+                        }
+                        catch
+                        {
+                            MessageBox.Show("업데이트 실패!", "HY Utility", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                        }
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+            }
+            catch
+            {
+                return;
+            }
+        }
 
         public static void CheckVersion()
         {
             ModData[] modDataList = { ModData.ChaosGreedier };
+
+            CheckProgramVersion();
 
             CheckCurrentVersion(modDataList);
             CheckLatestVersion(modDataList);

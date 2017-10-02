@@ -29,8 +29,7 @@ namespace HY_Utility
     {
         public static string storageUrl = @"https://teamhy.github.io/";
         public static string ModsPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + @"\My Games\Binding of Isaac Afterbirth+ Mods";
-
-        public string TempFolderPath;
+        public static string TempFolderPath;
 
         public Brush DefaultProgressBarBrush;
 
@@ -152,7 +151,7 @@ namespace HY_Utility
 
         private void MainFormLoad(object sender, RoutedEventArgs e)
         {
-            TempFolderPath = System.IO.Path.GetTempPath() + Assembly.GetEntryAssembly().GetName().Name;
+            TempFolderPath = System.IO.Path.GetTempPath() + Assembly.GetEntryAssembly().GetName().Name + @"\";
             DefaultProgressBarBrush = prgInstall.Foreground;
             VersionInfoUpdate();
 
@@ -193,7 +192,7 @@ namespace HY_Utility
             btnStart.IsEnabled = true;
             btnReload.IsEnabled = true;
 
-            var zipFilePath = String.Format(@"{0}\ChaosGreedier_{1}.zip", TempFolderPath, ModData.ChaosGreedier.LatestVersion);
+            var zipFilePath = String.Format(@"{0}ChaosGreedier_{1}.zip", TempFolderPath, ModData.ChaosGreedier.LatestVersion);
             var zipTempFilePath = zipFilePath + ".temp";
 
             if (File.Exists(zipTempFilePath))
@@ -215,7 +214,7 @@ namespace HY_Utility
         private void InstallChaosGreedier()
         {
             ModUtility.RemoveMod("chaosgreedier");
-            ExtractZipfile(String.Format(@"{0}\ChaosGreedier_{1}.zip", TempFolderPath, ModData.ChaosGreedier.LatestVersion), ModsPath + @"\chaosgreedier");
+            ExtractZipfile(String.Format(@"{0}ChaosGreedier_{1}.zip", TempFolderPath, ModData.ChaosGreedier.LatestVersion), ModsPath + @"\chaosgreedier");
         }
 
         private void BtnStart_Click(object sender, RoutedEventArgs e)
