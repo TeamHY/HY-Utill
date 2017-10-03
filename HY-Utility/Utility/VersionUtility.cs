@@ -45,7 +45,7 @@ namespace HY_Utility
 
                             webClient.DownloadFile(new Uri(updaterUri), updaterFileName);
 
-                            Process.Start(updaterFileName, String.Format("\"{0}\" \"{1}\" \"{2}\"", Assembly.GetEntryAssembly().GetName().Name, latestUrl, AppDomain.CurrentDomain.BaseDirectory + Assembly.GetEntryAssembly().GetName().Name + ".exe"));
+                            Process.Start(updaterFileName, String.Format("\"{0}\" \"{1}\" \"{2}\"", Process.GetCurrentProcess().ProcessName, latestUrl, Assembly.GetEntryAssembly().Location));
                         }
                         catch
                         {
