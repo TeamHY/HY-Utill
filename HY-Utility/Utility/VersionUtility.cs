@@ -39,11 +39,11 @@ namespace HY_Utility
                     if (result == MessageBoxResult.Yes)
                     {
                         try
-                        {
-                            var updaterUri = MainWindow.storageUrl + "HY-Updater.exe";
+                        {                            
+                            var updaterUrl = String.Format("{0}{1}/HY-Updater.exe", latestUrl, latestVersion);
                             var updaterFileName = MainWindow.TempFolderPath + "HY-Updater.exe";
 
-                            webClient.DownloadFile(new Uri(updaterUri), updaterFileName);
+                            webClient.DownloadFile(new Uri(updaterUrl), updaterFileName);
 
                             Process.Start(updaterFileName, String.Format("\"{0}\" \"{1}\" \"{2}\"", Process.GetCurrentProcess().ProcessName, latestUrl, Assembly.GetEntryAssembly().Location));
                         }
