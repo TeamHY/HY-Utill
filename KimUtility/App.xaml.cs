@@ -7,7 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows;
 
-namespace HY_Utility
+namespace KimUtility
 {
     /// <summary>
     /// App.xaml에 대한 상호 작용 논리

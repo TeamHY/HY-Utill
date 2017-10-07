@@ -1,4 +1,4 @@
-﻿using HY_Utility.Data;
+﻿using KimUtility.Data;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -9,7 +9,7 @@ using System.Text;
 using System.Windows;
 using System.Xml;
 
-namespace HY_Utility
+namespace KimUtility
 {
     class VersionUtility
     {
@@ -35,7 +35,7 @@ namespace HY_Utility
 
                 if (!Assembly.GetExecutingAssembly().GetName().Version.ToString().Equals(latestVersion))
                 {
-                    MessageBoxResult result = MessageBox.Show("신 버전이 있습니다.\r\n업데이트 하시겠습니까?", "HY Utility", MessageBoxButton.YesNo, MessageBoxImage.Asterisk);
+                    MessageBoxResult result = MessageBox.Show("신 버전이 있습니다.\r\n업데이트 하시겠습니까?", "KimUtility", MessageBoxButton.YesNo, MessageBoxImage.Asterisk);
                     if (result == MessageBoxResult.Yes)
                     {
                         try
@@ -49,7 +49,7 @@ namespace HY_Utility
                         }
                         catch
                         {
-                            MessageBox.Show("업데이트 실패!", "HY Utility", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                            MessageBox.Show("업데이트 실패!", "KimUtility", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                         }
                     }
                     else

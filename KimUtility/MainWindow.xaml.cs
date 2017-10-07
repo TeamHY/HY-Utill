@@ -1,4 +1,4 @@
-﻿using HY_Utility.Data;
+﻿using KimUtility.Data;
 using Ionic.Zip;
 using System;
 using System.Collections.Generic;
@@ -20,7 +20,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Xml;
 
-namespace HY_Utility
+namespace KimUtility
 {
     /// <summary>
     /// MainWindow.xaml에 대한 상호 작용 논리

@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.15
+VisualStudioVersion = 15.0.26730.16
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HY-Utility", "HY-Utility\HY-Utility.csproj", "{9122E675-456C-419A-8DEB-E67F8C9872BF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KimUtility", "KimUtility\KimUtility.csproj", "{9122E675-456C-419A-8DEB-E67F8C9872BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HY-Updater", "HY-Updater\HY-Updater.csproj", "{5C6BCC0C-68CC-4F3B-BF25-5F3C92E87F91}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KimUpdater", "HY-Updater\KimUpdater.csproj", "{5C6BCC0C-68CC-4F3B-BF25-5F3C92E87F91}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

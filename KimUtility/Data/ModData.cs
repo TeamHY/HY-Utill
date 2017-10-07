@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace HY_Utility.Data
+namespace KimUtility.Data
 {
     class ModData
     {

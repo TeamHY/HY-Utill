@@ -1,11 +1,11 @@
-﻿<Window x:Class="HY_Utility.MainWindow"
+﻿<Window x:Class="KimUtility.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:HY_Utility"
+        xmlns:local="clr-namespace:KimUtility"
         mc:Ignorable="d"
-        Title="HY Utility" Height="350" Width="525" ResizeMode="CanMinimize" Loaded="MainFormLoad" Icon="Resources/icon.ico">
+        Title="KimUtility" Height="350" Width="525" ResizeMode="CanMinimize" Loaded="MainFormLoad" Icon="Resources/icon.ico">
     <Grid>
         <Button x:Name="btnStart" Content="설치" HorizontalAlignment="Left" Height="30" Margin="439,281,0,0" VerticalAlignment="Top" Width="70" Click="BtnStart_Click"/>
         <ProgressBar x:Name="prgInstall" HorizontalAlignment="Left" Height="30" VerticalAlignment="Top" Width="424" Margin="10,281,0,0"/>
