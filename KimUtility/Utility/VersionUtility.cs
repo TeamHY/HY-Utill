@@ -25,7 +25,7 @@ namespace KimUtility
                 var xmlDocument = new XmlDocument();
                 xmlDocument.Load(MainWindow.storageUrl + "versiondata.xml");
 
-                var xmlNodeList = xmlDocument.SelectNodes(String.Format("/versiondata/{0}", "hyutility"));
+                var xmlNodeList = xmlDocument.SelectNodes(String.Format("/versiondata/{0}", "utility"));
 
                 foreach (XmlNode xmlNode in xmlNodeList)
                 {
@@ -39,13 +39,14 @@ namespace KimUtility
                     if (result == MessageBoxResult.Yes)
                     {
                         try
-                        {                            
-                            var updaterUrl = String.Format("{0}{1}/HY-Updater.exe", latestUrl, latestVersion);
-                            var updaterFileName = MainWindow.TempFolderPath + "HY-Updater.exe";
+                        {
+                            var updaterUrl = String.Format(@"{0}{1}/", latestUrl, latestVersion);
+                            var updaterFileName = "KimUpdater.exe";
+                            var updaterFilePath = MainWindow.TempFolderPath + updaterFileName;
 
-                            webClient.DownloadFile(new Uri(updaterUrl), updaterFileName);
+                            webClient.DownloadFile(new Uri(updaterUrl + updaterFileName), updaterFilePath);
 
-                            Process.Start(updaterFileName, String.Format("\"{0}\" \"{1}\" \"{2}\"", latestUrl, Assembly.GetEntryAssembly().Location, Process.GetCurrentProcess().ProcessName));
+                            Process.Start(updaterFilePath, String.Format("\"{0}\" \"{1}\" \"{2}\"", latestUrl, Assembly.GetEntryAssembly().Location, Process.GetCurrentProcess().ProcessName));
                         }
                         catch
                         {
