@@ -152,6 +152,10 @@ namespace KimUtility
         private void MainFormLoad(object sender, RoutedEventArgs e)
         {
             TempFolderPath = System.IO.Path.GetTempPath() + Assembly.GetEntryAssembly().GetName().Name + @"\";
+
+            if (!Directory.Exists(TempFolderPath))
+                Directory.CreateDirectory(TempFolderPath);
+
             DefaultProgressBarBrush = prgInstall.Foreground;
             VersionInfoUpdate();
 

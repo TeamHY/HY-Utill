@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Reflection;
@@ -42,11 +43,15 @@ namespace KimUtility
                         {
                             var updaterUrl = String.Format(@"{0}{1}/", latestUrl, latestVersion);
                             var updaterFileName = "KimUpdater.exe";
+
+                            if (!Directory.Exists(MainWindow.TempFolderPath))
+                                Directory.CreateDirectory(MainWindow.TempFolderPath);
+
                             var updaterFilePath = MainWindow.TempFolderPath + updaterFileName;
 
                             webClient.DownloadFile(new Uri(updaterUrl + updaterFileName), updaterFilePath);
 
-                            Process.Start(updaterFilePath, String.Format("\"{0}\" \"{1}\" \"{2}\"", latestUrl, Assembly.GetEntryAssembly().Location, Process.GetCurrentProcess().ProcessName));
+                            Process.Start(updaterFilePath, String.Format("\"{0}\" \"{1}\" \"{2}\"", updaterUrl, Assembly.GetEntryAssembly().Location, Process.GetCurrentProcess().ProcessName));
                         }
                         catch
                         {
