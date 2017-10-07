@@ -26,10 +26,10 @@ namespace HY_Updater
     {
         private WebClient webClient;
 
-        private string _UtilityProcessName;
-
-        private string _remoteAddress;
+        private string _latestUrl;
+        
         private string _localPath;
+        private string _localProcessName;
 
         private string _tempFolderPath;
         private string _tempFilePath;
@@ -49,13 +49,13 @@ namespace HY_Updater
             _tempFolderPath = System.IO.Path.GetTempPath() + Assembly.GetEntryAssembly().GetName().Name + @"\";
 
             webClient.DownloadProgressChanged += new DownloadProgressChangedEventHandler(UpdateProgressChanged);
-            webClient.DownloadFileCompleted += new AsyncCompletedEventHandler(UpdateCompleted);
+            webClient.DownloadFileCompleted   += new AsyncCompletedEventHandler(UpdateCompleted);
 
             if (App.Args[0] != "exit")
             {
-                _UtilityProcessName = App.Args[0];
-                _remoteAddress = App.Args[1];
-                _localPath = App.Args[2];
+                _latestUrl        = App.Args[0];
+                _localPath        = App.Args[1];
+                _localProcessName = App.Args[2];
 
                 try
                 {
@@ -100,8 +100,10 @@ namespace HY_Updater
         {
             try
             {
+                var remoteUrl = _latestUrl + "KimUtility.exe";
+
                 // 파일이 저장될 위치를 저장한다.
-                _tempFilePath = String.Format(@"{0}{1}", _tempFolderPath, System.IO.Path.GetFileName(_remoteAddress) + ".temp");
+                _tempFilePath = String.Format(@"{0}{1}", _tempFolderPath, System.IO.Path.GetFileName(remoteUrl) + ".temp");
 
                 // 폴더가 존재하지 않는다면 폴더를 생성한다.
                 if (!Directory.Exists(_tempFolderPath))
@@ -109,7 +111,7 @@ namespace HY_Updater
 
                 try
                 {
-                    webClient.DownloadFileAsync(new Uri(_remoteAddress), _tempFilePath);
+                    webClient.DownloadFileAsync(new Uri(remoteUrl), _tempFilePath);
 
                     //prgUpdate.Value = 0;
                     _nowUpdating = true;
@@ -168,7 +170,7 @@ namespace HY_Updater
 
         private void KillUtility()
         {
-            Process[] processList = Process.GetProcessesByName(System.IO.Path.GetFileNameWithoutExtension(_localPath));
+            Process[] processList = Process.GetProcessesByName(_localProcessName);
 
             if (processList.Length == 0)
                 return;
